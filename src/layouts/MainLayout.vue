@@ -1,42 +1,100 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
+  <q-layout view="lHh Lpr lFf" class="bg-dark">
+    <q-header flat class="bg-transparent q-pa-md">
+      <q-toolbar
+        class="toolbarShadow"
+        style="border-radius: 10px 10px 10px 10px"
+      >
         <q-btn
           flat
           dense
           round
+          text-color="grey-7"
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
+          v-if="!leftDrawerOpen"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <q-space />
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div class="q-pl-sm q-gutter-sm row items-center no-wrap flex">
+          <div
+            class="row flex flex-center absolute"
+            style="right: 1vmax; top: -0.3vmax"
+          >
+            <span v-if="morphGroupModel === 'btn'" class="text-grey-7">Opciones de usuario</span>
+            <q-btn
+              v-morph:btn:userGroup:300.resize="morphGroupModel"
+              fab
+              flat
+              color="grey-7"
+              icon="person"
+              @click="nextMorph"
+            >
+            </q-btn>
+          </div>
+
+          <q-card
+            v-morph:card1:userGroup:500.resize="morphGroupModel"
+            class="bg-white settingsMenu"
+            flat
+          >
+            <q-card-section class="sectionShadow">
+              <div class="row justify-between flex flex-center">
+                <span class="text-grey-7">{{ email }}</span>
+                <q-btn
+                  fab
+                  flat
+                  color="grey-7"
+                  icon="person"
+                  @click="nextMorph"
+                />
+              </div>
+
+              <q-separator />
+
+              <q-item clickable @click="logout">
+                <q-item-section>
+                  <div class="text-secondary">
+                    <q-icon name="logout" color="grey-7" />
+                    Salir
+                  </div>
+                </q-item-section>
+              </q-item>
+              <q-btn
+                flat
+                label="Cancel"
+                text-color="secondary"
+                @click="nextMorph"
+              />
+            </q-card-section>
+          </q-card>
+        </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
+      class="bg-dark"
       show-if-above
-      bordered
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+      <q-scroll-area class="fit">
+        <div class="q-pt-md q-pb-md">
+        </div>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+        <q-item>
+          <q-item-section>
+            <q-separator class="q-mt-md q-mb-xs" color="grey-4" />
+          </q-item-section>
+        </q-item>
+
+        <q-list padding>
+
+        </q-list>
+
+
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
@@ -45,72 +103,88 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+<script setup>
+import { ref, defineAsyncComponent, computed, onMounted } from "vue";
+import { useAuthStore } from "stores/auth-store";
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+const EssentialLink = defineAsyncComponent(() =>
+  import("../components/EssentialLink.vue")
+);
 
-export default defineComponent({
-  name: 'MainLayout',
+const router = useRouter();
+const $q = useQuasar();
+const leftDrawerOpen = ref(true);
+const autenticacionStore = useAuthStore();
+const morphGroupModel = ref("btn");
 
-  components: {
-    EssentialLink
-  },
+const nextMorphStep = {
+  btn: "card1",
+  card1: "btn",
+};
 
-  setup () {
-    const leftDrawerOpen = ref(false)
+function nextMorph() {
+  morphGroupModel.value = nextMorphStep[morphGroupModel.value];
+}
 
-    return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+const links1 = computed({
+  get() {
+    if (autenticacionStore.ejecucion !== null) {
+      return autenticacionStore.links.links1;
+    } else {
+      return [];
     }
-  }
-})
+  },
+});
+const links2 = computed({
+  get() {
+    if (autenticacionStore.ejecucion !== null) {
+      return autenticacionStore.links.links2;
+    } else {
+      return [];
+    }
+  },
+});
+const links3 = computed({
+  get() {
+    if (autenticacionStore.ejecucion !== null) {
+      return autenticacionStore.links.links3;
+    } else {
+      return [];
+    }
+  },
+});
+const email = computed({
+  get() {
+    if (autenticacionStore.ejecucion != null) {
+      return autenticacionStore.email;
+    } else {
+      return "";
+    }
+  },
+});
+
+function logout() {
+  $q.loading.show({
+    message: "Saliendo ...",
+  });
+  autenticacionStore
+    .logout()
+    .then(() => {
+      routesStore.linkActualMenu = [];
+      router.push("/");
+    })
+    .finally(() => {
+      $q.loading.hide();
+    });
+}
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+}
 </script>
+
+<style lang="scss" scoped>
+
+</style>
