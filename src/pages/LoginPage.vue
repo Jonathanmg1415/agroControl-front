@@ -166,22 +166,24 @@ const onSubmit = () => {
 .degradadoBoton {
   background: linear-gradient(
     100deg,
-    rgba(98, 166, 255, 1) 19%,
-    rgba(12, 99, 212, 1) 74%
+    rgba(76, 175, 80, 1) 19%, /* Lighter green */
+    rgba(34, 117, 76, 1) 74%  /* Darker green */
   );
 }
+
 .textoDegradado {
   font-size: 2vmax;
   background: linear-gradient(
     100deg,
-    rgba(98, 166, 255, 1) 19%,
-    rgba(12, 99, 212, 1) 74%
+    rgba(76, 175, 80, 1) 19%, /* Lighter green */
+    rgba(34, 117, 76, 1) 74%  /* Darker green */
   );
   -webkit-background-clip: text;
   color: transparent;
 }
+
 .warning {
-  -webkit-box-shadow: -1px 14px 24px -5px rgba(57, 66, 196, 0.5);
-  box-shadow: -1px 14px 24px -5px rgba(11, 19, 138, 0.2);
+  -webkit-box-shadow: -1px 14px 24px -5px rgba(51, 160, 136, 0.5); /* Lighter green shadow */
+  box-shadow: -1px 14px 24px -5px rgba(13, 82, 69, 0.2); /* Darker green shadow */
 }
 </style>

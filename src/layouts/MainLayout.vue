@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="lHh Lpr lFf" class="bg-dark">
-    <q-header flat class="bg-transparent q-pa-md">
+  <q-layout view="lHh Lpr lFf" class="img-background">
+    <q-header flat class="bg-green-5 rounded-lg shadow-2 q-pa-md">
       <q-toolbar
         class="toolbarShadow"
         style="border-radius: 10px 10px 10px 10px"
@@ -43,13 +43,7 @@
             <q-card-section class="sectionShadow">
               <div class="row justify-between flex flex-center">
                 <span class="text-grey-7">{{ email }}</span>
-                <q-btn
-                  fab
-                  flat
-                  color="grey-7"
-                  icon="person"
-                  @click="nextMorph"
-                />
+                <q-btn fab flat color="grey-7" icon="person" @click="nextMorph" />
               </div>
 
               <q-separator />
@@ -62,129 +56,28 @@
                   </div>
                 </q-item-section>
               </q-item>
-              <q-btn
-                flat
-                label="Cancel"
-                text-color="secondary"
-                @click="nextMorph"
-              />
+              <q-btn flat label="Cancel" text-color="secondary" @click="nextMorph" />
             </q-card-section>
           </q-card>
         </div>
       </q-toolbar>
     </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      class="bg-dark"
-      show-if-above
-    >
-      <q-scroll-area class="fit">
-        <div class="q-pt-md q-pb-md">
-        </div>
-
-        <q-item>
-          <q-item-section>
-            <q-separator class="q-mt-md q-mb-xs" color="grey-4" />
-          </q-item-section>
-        </q-item>
-
-        <q-list padding>
-
-        </q-list>
-
-
-      </q-scroll-area>
-    </q-drawer>
-
-    <q-page-container>
+    <q-page-container class="container-fluid">
       <router-view />
     </q-page-container>
+    <q-footer class="bg-green-5 shadow-2">
+      <div class="rounded-lg shadow-1 p-4 flex justify-center items-center">
+        <p class="text-grey-5 text-center">Copyright © - pixie inc was here</p>
+        <q-space />
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent, computed, onMounted } from "vue";
-import { useAuthStore } from "stores/auth-store";
-import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
+import { defineComponent } from "vue";
 
-const EssentialLink = defineAsyncComponent(() =>
-  import("../components/EssentialLink.vue")
-);
-
-const router = useRouter();
-const $q = useQuasar();
-const leftDrawerOpen = ref(true);
-const autenticacionStore = useAuthStore();
-const morphGroupModel = ref("btn");
-
-const nextMorphStep = {
-  btn: "card1",
-  card1: "btn",
-};
-
-function nextMorph() {
-  morphGroupModel.value = nextMorphStep[morphGroupModel.value];
-}
-
-const links1 = computed({
-  get() {
-    if (autenticacionStore.ejecucion !== null) {
-      return autenticacionStore.links.links1;
-    } else {
-      return [];
-    }
-  },
+defineComponent({
+  name: "LoginLayout",
 });
-const links2 = computed({
-  get() {
-    if (autenticacionStore.ejecucion !== null) {
-      return autenticacionStore.links.links2;
-    } else {
-      return [];
-    }
-  },
-});
-const links3 = computed({
-  get() {
-    if (autenticacionStore.ejecucion !== null) {
-      return autenticacionStore.links.links3;
-    } else {
-      return [];
-    }
-  },
-});
-const email = computed({
-  get() {
-    if (autenticacionStore.ejecucion != null) {
-      return autenticacionStore.email;
-    } else {
-      return "";
-    }
-  },
-});
-
-function logout() {
-  $q.loading.show({
-    message: "Saliendo ...",
-  });
-  autenticacionStore
-    .logout()
-    .then(() => {
-      routesStore.linkActualMenu = [];
-      router.push("/");
-    })
-    .finally(() => {
-      $q.loading.hide();
-    });
-}
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
 </script>
-
-<style lang="scss" scoped>
-
-</style>
