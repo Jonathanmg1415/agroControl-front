@@ -1,9 +1,9 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="img-background">
     <q-header class="bg-green-5 rounded-lg shadow-2">
-      <q-toolbar class="flex justify-center items-center">
+      <q-toolbar class="flex  ">
         <q-img :src="''" alt="Agrocontrol Logo" height="50px" width="50px" />
-        <span class="text-white text-5xl font-bold ml-4 text-shadow-lg">Agrocontrol</span>
+        <span class="text-white text-h6 ml-4 text-shadow-lg">Agrocontrol</span>
       </q-toolbar>
     </q-header>
     <q-page-container class="container-fluid">
