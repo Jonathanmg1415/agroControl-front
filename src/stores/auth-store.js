@@ -5,8 +5,8 @@ import { Cookies } from "quasar";
 import { ref, computed } from "vue";
 
 const VERIFICATION_ROUTE = process.env.VERIFICATION_ROUTE;
-const LOGIN_ROUTE = process.env.LOGIN_ROUTE;
-const FETCH_USER_ROUTE = process.env.FETCH_USER_ROUTE;
+const LOGIN_ROUTE = "/login";
+const FETCH_USER_ROUTE = "/fetch";
 
 const $q = useQuasar();
 
@@ -17,7 +17,6 @@ export const useAuthStore = defineStore("autenticacion", () => {
     },
   });
   const ejecucion = ref(null);
-  const links = ref({ links1: {}, links2: {}, links3: {}, links4: {} });
   const id = ref(0);
   const email = ref("");
   const roles = ref("");
@@ -55,12 +54,10 @@ export const useAuthStore = defineStore("autenticacion", () => {
         .post(LOGIN_ROUTE, data.body)
         .then((response) => {
           ejecucion.value = response.data.ejecucion;
-
           if (response.data.ejecucion.respuesta.estado === "OK") {
             email.value = ejecucionComputada.value.datos.user.data.email;
             roles.value = ejecucionComputada.value.datos.user.data.roles;
             id.value = ejecucionComputada.value.datos.user.data.id;
-            links.value = ejecucionComputada.value.datos.links.data;
 
             setHeader({
               token: ejecucion.value.datos.token,
@@ -72,7 +69,6 @@ export const useAuthStore = defineStore("autenticacion", () => {
             email.value = "";
             roles.value = "";
             id.value = "";
-            links.value = "";
             reject(new Error(response.data.ejecucion.respuesta.message));
           }
         })
@@ -114,7 +110,6 @@ export const useAuthStore = defineStore("autenticacion", () => {
           roles.value = ejecucionComputada.value.datos.user.data.roles;
           id.value = ejecucionComputada.value.datos.user.data.id;
           email.value = ejecucionComputada.value.datos.user.data.email;
-          links.value = ejecucionComputada.value.datos.links.data;
         })
         .then(() => {
           loginCallback();
@@ -132,7 +127,6 @@ export const useAuthStore = defineStore("autenticacion", () => {
   const logout = async () => {
     Cookies.remove("authorization_token");
     ejecucion.value = null;
-    links.value = null;
   };
 
   const verify = (state, token) => {
@@ -147,7 +141,6 @@ export const useAuthStore = defineStore("autenticacion", () => {
 
   return {
     ejecucion,
-    links,
     id,
     email,
     roles,
