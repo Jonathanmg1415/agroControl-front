@@ -10,7 +10,7 @@
       <router-view />
     </q-page-container>
     <q-footer class="bg-green-5 shadow-2">
-      <div class="rounded-lg shadow-1 p-4 flex justify-center items-center">  <p class="text-grey-5 text-center">Copyright © pixie inc was here</p>
+      <div class="rounded-lg shadow-1 p-4 flex justify-center items-center">  <p class="text-grey-5 text-center">Copyright © Pixie inc was here</p>
         <q-space />
       </div>
     </q-footer>
