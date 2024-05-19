@@ -66,8 +66,10 @@ module.exports = configure(function (ctx) {
       // analyze: true,
       env: {
         BASE_URL_API: ctx.dev
-          ? "http://localhost:1335"
-          : "http://localhost:1335",
+         // ? "http://localhost:1335"
+         //: "http://localhost:1335",
+         ? "http://localhost:3000/"
+         : "http://localhost:3000/",
 
         VERIFICATION_ROUTE: ctx.dev ? "/auth/verify" : "/auth/verify",
         LOGIN_ROUTE: ctx.dev ? "/auth/login" : "/auth/login",

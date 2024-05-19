@@ -5,7 +5,7 @@ const routes = [
     children: [
       {
         path: "",
-        component: () => import("pages/IndexPage.vue"),
+        component: () => import("pages/IndexPage.vue"), 
         meta: { auth: true },
       },
       {
@@ -13,6 +13,18 @@ const routes = [
         component: () => import("pages/GraficasPage.vue"),
         meta: { auth: true },
       },
+      {
+        path: "/productos",
+        name: "products",
+        component: () => import("pages/ProductsPage.vue"),
+        //meta: { auth: true },
+      },
+      {
+        path: "/nuevos-productos/:id?",
+        name: "FormProduct",
+        component: () => import("pages/FormProducts.vue"),
+        //meta: { auth: true },
+      }
     ],
   },
   {
@@ -21,7 +33,7 @@ const routes = [
     children: [
       {
         path: "",
-        component: () => import("pages/LoginPage.vue"),
+        component: () => import("pages/LoginPage.vue"), 
       },
     ],
   },

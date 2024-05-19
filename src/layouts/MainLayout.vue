@@ -86,6 +86,7 @@ const leftDrawerOpen = ref(false);
 const menuItems = [
   { label: "Inicio", route: "/main" },
   { label: "Graficas", route: "/graficas" },
+  { label: "Productos", route: "/productos"}
   // Agrega más elementos según necesites
 ];
 

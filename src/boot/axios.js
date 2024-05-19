@@ -2,10 +2,11 @@ import { boot } from "quasar/wrappers";
 import axios from "axios";
 import { createPinia } from "pinia";
 
-const api = axios.create({ baseURL: "http://localhost:1337/sapi/" });
+//const api = axios.create({ baseURL: "http://localhost:1337/sapi/" });
+const api = axios.create({ baseURL: "http://localhost:3000/" });
 
-const axiosInstanceBaseURL = "http://localhost:1337/sapi/";
-
+//const axiosInstanceBaseURL = "http://localhost:1337/sapi/";
+const axiosInstanceBaseURL = "http://localhost:3000/";
 const axiosInstance = axios.create({
   baseURL: axiosInstanceBaseURL,
 });
