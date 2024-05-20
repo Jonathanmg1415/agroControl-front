@@ -85,6 +85,7 @@ const leftDrawerOpen = ref(false);
 
 const menuItems = [
   { label: "Inicio", route: "/main" },
+  { label: "Egresos", route: "/egresos"},
   { label: "Graficas", route: "/graficas" },
   // Agrega más elementos según necesites
 ];
@@ -142,7 +143,7 @@ function closeLeftDrawer() {
   top: 10%;
   left: 0;
   width: 250px; /* Ancho del menú */
-  height: 20%;
+  height: 27vh;
   padding: 20px;
   border-radius: 10px;
 }
