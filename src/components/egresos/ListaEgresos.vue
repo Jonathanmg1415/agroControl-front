@@ -130,7 +130,7 @@
           />
           <q-menu>
             <q-list dense style="min-width: 185px">
-              <q-item clickable v-close-popup @click="exportarTablaXlsxs()">
+              <q-item clickable v-close-popup @click="exportarTablaXlsx()">
                 <q-item-section>XLSX</q-item-section>
               </q-item>
             </q-list>
@@ -170,7 +170,7 @@ import { useEgresosStore } from "stores/egresos-store.js";
 import { useRoute, useRouter } from "vue-router";
 import { useQuasar, date } from "quasar";
 import { ref, computed, onMounted } from "vue";
-//import * as XLSX from 'xlsx/xlsx.mjs';
+import * as XLSX from 'xlsx/xlsx.mjs';
 
 const columns = [
   {
@@ -406,22 +406,13 @@ function ordenarDatos() {
   return datosExportar;
 }
 
-async function exportarTablaXlsxs() {
-  $q.notify({
-    progress: true,
-    message: "Exportar esta en contrucción ",
-    icon: "information",
-    color: "white",
-    textColor: "orange",
-  });
-}
-
 async function exportarTablaXlsx() {
   try {
     $q.loading.show({
       message: "Cargando exportación ...",
     });
-    //await egresosStore.exportarEgresos(true);
+
+    await egresosStore.exportarEgresos(true);
     const datosExportar = ordenarDatos();
 
     // Creamos una hoja de cálculo con nuestros datos tipo JSON
