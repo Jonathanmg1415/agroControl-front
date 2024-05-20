@@ -12,26 +12,31 @@
             class="col-lg-4 col-xs-12"
             :rules="[ val => val && val.length > 0 || 'Campo obligatorio']"
         />
-        <q-input
+        <q-select
             outlined
             v-model="form.type"
+            :options="options"
             label="Tipo"
-            lazy-rules
             class="col-lg-4 col-xs-12"
-            :rules="[ val => val && val.length > 0 || 'Campo obligatorio']"
          />
          <q-input
             outlined
             v-model="form.estimated_value"
             label="Valor estimado"
+            mask="#.#"
+            reverse-fill-mask
             lazy-rules
             class="col-lg-4 col-xs-12"
             :rules="[ val => val && val.length > 0 || 'Campo obligatorio']"
          />
          <div class="col-lg-12 col-xs-12">
-            <q-editor 
+            <q-input
                 v-model="form.description" 
-                min-height="5rem"
+                label="Descripción"
+                outlined
+                autogrow
+                lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Campo obligatorio']"
             />
          </div>
 
@@ -105,7 +110,11 @@ export default defineComponent({
 
       return {
         form,
-        onSubmit
+        onSubmit,
+        type: ref(null),
+        options:[
+            'Abono', 'Químico','Mano de obra'
+        ]
       }
     }
 })
