@@ -9,13 +9,18 @@ const routes = [
         meta: { auth: true },
       },
       {
-        path: "/egresos",
-        component: () => import("pages/egresos/GestionEgresos.vue"),
+        path: "egresos",
+        component: () => import("src/pages/egresos/GestionEgresos.vue"),
         meta: { auth: true },
       },
       {
-        path: "/graficas",
-        component: () => import("pages/GraficasPage.vue"),
+        path: "egresos/nuevo",
+        component: () => import("src/pages/egresos/NuevoEgreso.vue"),
+        meta: { auth: true },
+      },
+      {
+        path: "graficas",
+        component: () => import("src/pages/GraficasPage.vue"),
         meta: { auth: true },
       },
     ],
