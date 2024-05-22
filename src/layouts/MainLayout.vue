@@ -144,7 +144,7 @@ function closeLeftDrawer() {
   top: 10%;
   left: 0;
   width: 250px; /* Ancho del menú */
-  height: 27vh;
+  height: 35vh;
   padding: 20px;
   border-radius: 10px;
 }
