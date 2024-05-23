@@ -85,10 +85,10 @@ const leftDrawerOpen = ref(false);
 
 const menuItems = [
   { label: "Inicio", route: "/main" },
-  { label: "Egresos", route: "/main/egresos"},
-  { label: "Estadisticas", route: "/main/estadisticas" },
   { label: "Productos", route: "/main/productos" },
   { label: "Ingresos", route: "/main/ingresos" },
+  { label: "Egresos", route: "/main/egresos"},
+  { label: "Estadisticas", route: "/main/estadisticas" },
   // Agrega más elementos según necesites
 ];
 
