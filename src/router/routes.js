@@ -14,15 +14,16 @@ const routes = [
         meta: { auth: true },
       },
       {
+        path: "estadisticas",
+        component: () => import("src/pages/estadisticas/EstadisticasPage.vue"),
+        meta: { auth: true },
+      },
+      {
         path: "egresos/nuevo",
         component: () => import("src/pages/egresos/NuevoEgreso.vue"),
         meta: { auth: true },
       },
-      {
-        path: "graficas",
-        component: () => import("src/pages/GraficasPage.vue"),
-        meta: { auth: true },
-      },
+
       {
         path: "ingresos",
         component: () => import("src/pages/ingresos/GestionIngresos.vue"),

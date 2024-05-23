@@ -32,7 +32,9 @@
         </q-toolbar>
       </div>
       <div class="row q-col-gutter-sm">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-weight-bold fontG">
+        <div
+          class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-weight-bold fontG"
+        >
           Datos generales del egreso
         </div>
 
@@ -61,7 +63,12 @@
                     :locale="fechasEs"
                   >
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                      <q-btn
+                        v-close-popup
+                        label="Cerrar"
+                        color="primary"
+                        flat
+                      />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -78,8 +85,10 @@
             label="Nombre del egreso*"
             :options="listaNombre"
             :rules="[
-              (val) => (val != null && val !== '') || 'Seleccione el tipo de egreso',
+              (val) =>
+                (val != null && val !== '') || 'Seleccione el tipo de egreso',
             ]"
+            @update:model-value="buscarProductos"
           >
             <template v-slot: append>
               <div class="flex flex-center">
@@ -97,7 +106,8 @@
             label="Descripción *"
             lazy-rules
             :rules="[
-              (val) => (val !== null && val !== '') || 'Ingrese una descripción',
+              (val) =>
+                (val !== null && val !== '') || 'Ingrese una descripción',
             ]"
           >
             <template v-slot: append>
@@ -108,13 +118,18 @@
           </q-input>
         </div>
 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-weight-bold fontG">
+        <div
+          class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-weight-bold fontG"
+        >
           Detalle del egreso
         </div>
 
-        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pl-md">
-          <div class="row items-center">
+        <div
+          class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 q-pl-md row items-center"
+        >
+          <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-xs-9 q-pl-md">
             <q-select
+              :disable="!habilitarDetalle"
               filled
               v-model="productoSeleccionado"
               label="Productos"
@@ -128,12 +143,15 @@
                     <q-item-label>{{ scope.opt.nombre }}</q-item-label>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>{{ scope.opt.precio }}</q-item-label>
+                    <q-item-label>{{ scope.opt.valorestimado }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </template>
             </q-select>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 q-pl-md">
             <q-btn
+              :disable="!habilitarDetalle"
               color="primary"
               icon="add"
               @click="agregarProducto(productoSeleccionado)"
@@ -149,10 +167,18 @@
           :columns="columns"
           row-key="id"
           class="q-pa-sm"
+          no-data-label="No se encontraron datos"
         >
+          <template v-slot:body-cell-cantidad="props">
+            <q-td :props="props">{{ props.row.cantidad }}</q-td>
+          </template>
           <template v-slot:body-cell-precio="props">
             <q-td :props="props">
-              {{ props.row.precio }}
+              <q-input
+                v-model="props.row.valorestimado"
+                type="number"
+                min="0"
+              />
             </q-td>
           </template>
           <template v-slot:body-cell-acciones="props">
@@ -174,8 +200,13 @@
           type="submit"
           color="secondary"
         />
-        <q-btn color="secondary" label="Cancelar" type="reset" class="q-ml-sm" />
-        <div class="text-h6 q-mt-md">Total: {{ total }}</div>
+        <q-btn
+          color="secondary"
+          label="Cancelar"
+          type="reset"
+          class="q-ml-sm"
+        />
+        <div class="text-h6 q-mt-md">Total: {{ fixedNumber(total) }}</div>
       </div>
     </q-form>
   </div>
@@ -183,47 +214,86 @@
 
 <script setup>
 import { useEgresosStore } from "stores/egresos-store.js";
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useQuasar, date } from 'quasar';
+import { useProductosStore } from "stores/productos-store.js";
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useQuasar, date } from "quasar";
 
 const router = useRouter();
 const $q = useQuasar();
 const egresosStore = useEgresosStore();
+const productosStore = useProductosStore();
 
 const fechasEs = ref({
   months: [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
   ],
-  days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+  days: [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ],
 });
 
+const habilitarDetalle = ref(false);
 const fechaEgreso = ref(null);
 const nombre = ref(null);
 const descripcion = ref(null);
 const productoSeleccionado = ref(null);
 const productosSeleccionados = ref([]);
+const productosEncontrados = ref(null);
 
 const listaNombre = ref([
-  { value: 'Fumigación', label: 'FUMIGACIÓN' },
-  { value: 'Abono', label: 'ABONO' },
-  { value: 'Acarreo', label: 'ACARREO' },
-  { value: 'Plantación', label: 'PLANTACIÓN' },
-  { value: 'Mano_de_obra', label: 'TRABAJO' },
-]);
-
-const productos = ref([
-  { id: 1, nombre: 'Producto 1', precio: 100 },
-  { id: 2, nombre: 'Producto 2', precio: 200 },
-  { id: 3, nombre: 'Producto 3', precio: 300 },
+  { value: "Quimico", label: "FUMIGACIÓN" },
+  { value: "Abono", label: "ABONO" },
+  { value: "Acarreo", label: "ACARREO" },
+  { value: "Plantar", label: "PLANTACIÓN" },
+  { value: "Mano_obra", label: "TRABAJO" },
 ]);
 
 const columns = [
-  { name: 'nombre', label: 'Producto', field: 'nombre' },
-  { name: 'precio', label: 'Precio', field: 'precio', align: 'right' },
-  { name: 'acciones', label: 'Acciones', field: 'acciones', align: 'center' },
+  { name: "nombre", label: "Producto", field: "nombre", align: "center" },
+  { name: "cantidad", label: "Cantidad", field: "cantidad", align: "center" },
+  {
+    name: "valorestimado",
+    label: "Precio",
+    field: "valorestimado",
+    align: "center",
+  },
+  { name: "acciones", label: "Acciones", field: "acciones", align: "center" },
 ];
+
+const productos = computed({
+  get() {
+    return productosEncontrados.value;
+  },
+  async set(valor) {
+    if (valor !== productosEncontrados.value && valor.length) {
+      productosEncontrados.value = valor;
+    }
+  },
+});
+
+function fixedNumber(number) {
+  return new Intl.NumberFormat("es-CO", {
+    maximumFractionDigits: 2,
+  }).format(+number);
+}
 
 const props = defineProps({
   egreso: {
@@ -241,7 +311,10 @@ const props = defineProps({
 });
 
 const validacionFechaEgreso = {
-  date: [(val) => validacionFecha(val) || val === null || 'La fecha del egreso es inválida'],
+  date: [
+    (val) =>
+      validacionFecha(val) || val === null || "La fecha del egreso es inválida",
+  ],
 };
 
 function validacionFecha(fechaDEgreso) {
@@ -249,28 +322,73 @@ function validacionFecha(fechaDEgreso) {
 }
 
 const dateNow = ref(Date.now());
-const today = ref(date.formatDate(dateNow.value, 'YYYY/MM/DD'));
+const today = ref(date.formatDate(dateNow.value, "YYYY/MM/DD"));
 
 function agregarProducto(productoId) {
-  const producto = productos.value.find((p) => p.id === productoId);
-  if (producto && !productosSeleccionados.value.some((p) => p.id === producto.id)) {
-    productosSeleccionados.value.push(producto);
-    console.log('Producto agregado:', producto);
+  const producto = productosEncontrados.value.find(
+    (p) => p.id === productoId.id
+  );
+  if (producto) {
+    // Verificar si el producto ya está en la lista
+    const index = productosSeleccionados.value.findIndex(
+      (p) => p.id === producto.id
+    );
+    if (index !== -1) {
+      // Si el producto ya está en la lista, aumenta su cantidad
+      productosSeleccionados.value[index].cantidad += 1;
+    } else {
+      // Si el producto no está en la lista, agrégalo con cantidad 1
+      productosSeleccionados.value.push({ ...producto, cantidad: 1 });
+    }
   } else {
-    console.log('Producto no encontrado o ya seleccionado:', productoId);
+    $q.notify({
+      progress: true,
+      message: "Error el producto no existe.",
+      icon: "error",
+      color: "red",
+      textColor: "white",
+    });
   }
 }
 
 function eliminarProducto(producto) {
-  const index = productosSeleccionados.value.findIndex((p) => p.id === producto.id);
+  const index = productosSeleccionados.value.findIndex(
+    (p) => p.id === producto.id
+  );
   if (index !== -1) {
     productosSeleccionados.value.splice(index, 1);
   }
 }
 
 const total = computed(() => {
-  return productosSeleccionados.value.reduce((sum, producto) => sum + producto.precio, 0);
+  return productosSeleccionados.value.reduce(
+    (sum, producto) => sum + producto.valorestimado * producto.cantidad,
+    0
+  );
 });
+
+async function buscarProductos(productoSelect) {
+  try {
+    $q.loading.show({
+      message: "Cargando productos ...",
+    });
+
+    productosStore.filter.tipoProductoBusqueda = productoSelect.value;
+    await productosStore.cargarProductosEgreso();
+    productosEncontrados.value = productosStore.records.data;
+    habilitarDetalle.value = true;
+  } catch (error) {
+    $q.notify({
+      progress: true,
+      message: "Error al momento de cargar los registros. ",
+      icon: "error",
+      color: "red",
+      textColor: "white",
+    });
+  } finally {
+    $q.loading.hide();
+  }
+}
 
 async function onReset() {
   nombre.value = null;
@@ -280,7 +398,7 @@ async function onReset() {
   router.back();
 }
 
-async function actualizarEgreso() {
+/* async function actualizarEgreso() {
   const egreso = {
     id: props.egreso.id,
     fecha: new Date(fechaEgreso.value),
@@ -289,22 +407,45 @@ async function actualizarEgreso() {
     productos: productosSeleccionados.value,
   };
 
-  // Simulate API call
-  console.log('Updating egreso:', egreso);
-  router.push('/main/egresos');
-}
+  console.log("Updating egreso:", egreso);
+  router.push("/main/egresos");
+} */
 
 async function agregarEgreso() {
   const egreso = {
-    fecha: new Date(fechaEgreso.value),
-    nombre: nombre.value,
+    fecha: fechaEgreso.value,
+    nombre: nombre.value.value,
     descripcion: descripcion.value,
-    productos: productosSeleccionados.value,
+    valortotal: total.value,
   };
+  if (
+    productosSeleccionados.value.length > 0 &&
+    fechaEgreso.value != null &&
+    nombre.value.value != null &&
+    descripcion.value != null &&
+    total.value > 0
+  ) {
 
-  // Simulate API call
-  console.log('Adding egreso:', egreso);
-  router.push('/main/egresos');
+    await egresosStore.guardarEgresos(egreso);
+
+    $q.notify({
+      progress: true,
+      message: 'El egreso se agrego satisfactoriamente. ',
+      icon: 'save',
+      color: 'white',
+      textColor: 'primary',
+    });
+
+    router.push("/main/egresos");
+  } else {
+    $q.notify({
+      progress: true,
+      message: "Error al agregar el egreso.",
+      icon: "error",
+      color: "red",
+      textColor: "white",
+    });
+  }
 }
 
 function onSubmit() {
@@ -315,7 +456,7 @@ function onSubmit() {
   }
 }
 
-onMounted(async() => {
+onMounted(async () => {
   if (!props.estaModoCrear) {
     const egreso = props.egreso;
     nombre.value = egreso.nombre;
@@ -323,14 +464,7 @@ onMounted(async() => {
     fechaEgreso.value = egreso.fecha;
     productosSeleccionados.value = egreso.productos || [];
   } else {
-    //await egresosStore.consultarParametros();
+    habilitarDetalle.value = false;
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.fontG {
-  font-size: 1vmax;
-  font-family: 'graviola';
-}
-</style>

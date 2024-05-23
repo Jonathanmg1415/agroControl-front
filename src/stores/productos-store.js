@@ -38,6 +38,15 @@ export const useProductosStore = defineStore("productosStore", () => {
     limite: 10,
   });
 
+  const paginationEgreso = ref({
+    sortBy: "nombre",
+    descending: false,
+    page: 1,
+    rowsPerPage: 999,
+    rowsNumber: 999,
+    limite: 999,
+  });
+
   async function cargarProductos(original) {
     const params = {
       params: {
@@ -73,6 +82,41 @@ export const useProductosStore = defineStore("productosStore", () => {
     }
   }
 
+ async function cargarProductosEgreso() {
+    const params = {
+      params: {
+        filter: filter.value,
+        pagination: paginationEgreso.value,
+      },
+    };
+
+    try {
+      const p = new Promise(async function (resolve, reject) {
+        try {
+          await axiosInstance
+            .get(RUTA_LISTAR_PRODUCTOS, params)
+            .then((response) => {
+              if (response.data.ejecucion.respuesta.estado === "OK") {
+                records.value.data = response.data.ejecucion.datos.records.data;
+                pagination.value = response.data.ejecucion.datos.pagination;
+                resolve();
+              } else {
+                reject(new Error(response.data.ejecucion.respuesta.mensaje));
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } catch (error) {
+          reject(error);
+        }
+      });
+      return p;
+    } catch (error) {
+      console.log("Error en el proceso:", error.message);
+    }
+  }
+  
   async function agregarProducto(producto) {
     try {
       const p = new Promise(async function (resolve, reject) {
@@ -99,12 +143,16 @@ export const useProductosStore = defineStore("productosStore", () => {
       console.log("Error en el proceso:", error.message);
     }
   }
+  
+  
 
   return {
+    cargarProductosEgreso,
     paginationOriginal,
-    filterOriginal,
+    paginationEgreso,
     cargarProductos,
     agregarProducto,
+    filterOriginal,
     pagination,
     records,
     filter,
