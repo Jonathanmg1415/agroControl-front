@@ -237,14 +237,7 @@
   }
 
   function abrirCrearProducto() {
-    //router.push("/main/cliente/nuevo");
-    $q.notify({
-      progress: true,
-      message: "Agregar producto esta en contrucción ",
-      icon: "information",
-      color: "white",
-      textColor: "orange",
-    });
+    router.push("/main/productos/nuevo");
   }
 
   function editarProducto(idproducto) {

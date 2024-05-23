@@ -34,6 +34,11 @@ const routes = [
         component: () => import("src/pages/productos/GestionProductos.vue"),
         meta: { auth: true },
       },
+      {
+        path: "productos/nuevo",
+        component: () => import("src/pages/productos/NuevoProducto.vue"),
+        meta: { auth: true },
+      },
     ],
   },
   {
