@@ -33,7 +33,7 @@
           flat
           dense
           round
-          text-color="black"
+          text-color="white"
           icon="menu"
           aria-label="Menu"
           @click.stop="toggleLeftDrawer"
@@ -43,14 +43,14 @@
         <q-space />
 
         <div class="row q-col-gutter-sm">
-          <q-item-label class="text-black col-lg-6 col-md-6 col-sm-6 col-xs-6"
+          <q-item-label class="text-white col-lg-6 col-md-6 col-sm-6 col-xs-6"
             >Salida Segura</q-item-label
           >
           <q-btn
             flat
             size="md"
             icon="logout"
-            class="text-black cursor-pointer col-lg-6 col-md-6 col-sm-6 col-xs-6"
+            class="text-white cursor-pointer col-lg-6 col-md-6 col-sm-6 col-xs-6"
             @click="logout"
           />
         </div>
@@ -61,7 +61,7 @@
     </q-page-container>
     <q-footer class="bg-green-7 shadow-2">
       <div class="rounded-lg shadow-1 p-4 flex justify-center items-center">
-        <p class="text-black text-bold text-center">
+        <p class="text-white text-bold text-center">
           Copyright © - Pixie inc was here
         </p>
         <q-space />
@@ -86,7 +86,7 @@ const leftDrawerOpen = ref(false);
 const menuItems = [
   { label: "Inicio", route: "/main" },
   { label: "Egresos", route: "/main/egresos"},
-  { label: "Graficas", route: "/main/graficas" },
+  { label: "Estadisticas", route: "/main/estadisticas" },
   { label: "Ingresos", route: "/main/ingresos" },
   // Agrega más elementos según necesites
 ];

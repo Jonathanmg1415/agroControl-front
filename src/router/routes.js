@@ -14,8 +14,8 @@ const routes = [
         meta: { auth: true },
       },
       {
-        path: "graficas",
-        component: () => import("src/pages/GraficasPage.vue"),
+        path: "estadisticas",
+        component: () => import("src/pages/estadisticas/EstadisticasPage.vue"),
         meta: { auth: true },
       },
       {
