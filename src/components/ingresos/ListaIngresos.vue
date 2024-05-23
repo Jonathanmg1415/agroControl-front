@@ -258,14 +258,7 @@ function fixedNumber(number) {
 }
 
 function abrirCrearIngreso() {
-  //router.push("/main/cliente/nuevo");
-  $q.notify({
-    progress: true,
-    message: "Agregar ingreso esta en contrucción ",
-    icon: "information",
-    color: "white",
-    textColor: "orange",
-  });
+  router.push("/main/ingresos/nuevo");
 }
 
 function editarIngreso(idingreso) {

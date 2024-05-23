@@ -4,17 +4,14 @@ import { date } from "quasar";
 import { ref } from "vue";
 
 const RUTA_LISTAR_INGRESOS = "/ingresos";
-/* const RUTA_GUARDAR_PAGO = '/transaccionpago/guardar';*/
-const RUTA_EXPORTAR_EGRESOS = '/egresos/exportar';
+const RUTA_CREAR_INGRESO = "/ingresos/crear";
+const RUTA_EXPORTAR_EGRESOS = "/egresos/exportar";
 
 export const useIngresosStore = defineStore("ingresosStore", () => {
   const timeStamp = Date.now();
-
   const today = date.formatDate(timeStamp, "YYYY/MM/DD");
-
   const afterD = date.formatDate(
     date.subtractFromDate(timeStamp, { year: 1 }),
-
     "YYYY/MM/DD"
   );
 
@@ -104,15 +101,24 @@ export const useIngresosStore = defineStore("ingresosStore", () => {
     }
   }
 
-  /*   async function guardarRegistropago(params) {
+  async function crearIngreso(ingreso) {
+    const params = {
+      params: {
+        fecha: ingreso.fecha,
+        nombre: ingreso.nombre,
+        descripcion: ingreso.descripcion,
+        valor: ingreso.valor,
+      },
+    };
+
     try {
       const p = new Promise(async function (resolve, reject) {
         try {
           await axiosInstance
-            .post(RUTA_GUARDAR_PAGO, params)
+            .get(RUTA_CREAR_INGRESO, params)
             .then((response) => {
               if (response.data.ejecucion.respuesta.estado === "OK") {
-                resolve(response.data.ejecucion.datos);
+                resolve();
               } else {
                 reject(new Error(response.data.ejecucion.respuesta.mensaje));
               }
@@ -128,48 +134,10 @@ export const useIngresosStore = defineStore("ingresosStore", () => {
     } catch (error) {
       console.log("Error en el proceso:", error.message);
     }
-  } */
-
-  // async function exportarEgresos(original) {
-  //   const params = {
-  //     params: {
-  //       filter: filter.value,
-  //       pagination: original
-  //         ? paginationOriginalExportar.value
-  //         : paginationExportar.value,
-  //     },
-  //   };
-  //   try {
-  //     const p = new Promise(async function (resolve, reject) {
-  //       try {
-  //         await axiosInstance
-  //           .get(RUTA_EXPORTAR_EGRESOS, params)
-  //           .then((response) => {
-  //             if (response.data.ejecucion.respuesta.estado === "OK") {
-  //               records.value.dataExportar =
-  //                 response.data.ejecucion.datos.egresos;
-  //               resolve();
-  //             } else {
-  //               reject(new Error(response.data.ejecucion.respuesta.mensaje));
-  //             }
-  //           })
-  //           .catch((error) => {
-  //             reject(error);
-  //           });
-  //       } catch (error) {
-  //         reject(error);
-  //       }
-  //     });
-  //     return p;
-  //   } catch (error) {
-  //     console.log("Error en el proceso:", error.message);
-  //   }
-  // }
+  }
 
   return {
     paginationOriginalExportar,
-    // exportarEgresos,
-    //guardarRegistropago,
     paginationExportar,
     paginationOriginal,
     filterOriginal,
@@ -177,5 +145,6 @@ export const useIngresosStore = defineStore("ingresosStore", () => {
     pagination,
     records,
     filter,
+    crearIngreso, // Agregar la función al store
   };
 });

@@ -4,6 +4,8 @@ import { ref } from "vue";
 
 const RUTA_LISTAR_PRODUCTOS = "/productos";
 const RUTA_AGREGAR_PRODUCTOS = "/productos/agregar";
+const RUTA_PRODUCTO_CONSULTA = "/productos/consulta";
+const RUTA_PRODUCTO_ACTUALIZAR = "/productos/actualizar";
 
 export const useProductosStore = defineStore("productosStore", () => {
   const filter = ref({
@@ -82,7 +84,7 @@ export const useProductosStore = defineStore("productosStore", () => {
     }
   }
 
- async function cargarProductosEgreso() {
+  async function cargarProductosEgreso() {
     const params = {
       params: {
         filter: filter.value,
@@ -116,12 +118,11 @@ export const useProductosStore = defineStore("productosStore", () => {
       console.log("Error en el proceso:", error.message);
     }
   }
-  
+
   async function agregarProducto(producto) {
     try {
       const p = new Promise(async function (resolve, reject) {
         try {
-          console.log('mensaje',producto);
           await axiosInstance
             .post(RUTA_AGREGAR_PRODUCTOS, producto)
             .then((response) => {
@@ -143,12 +144,73 @@ export const useProductosStore = defineStore("productosStore", () => {
       console.log("Error en el proceso:", error.message);
     }
   }
-  
-  
+
+  async function consultarProducto(idProducto) {
+    const params = {
+      params: {
+        idProducto: idProducto,
+      },
+    };
+    try {
+      const p = new Promise(async function (resolve, reject) {
+        try {
+          await axiosInstance
+            .get(RUTA_PRODUCTO_CONSULTA, params)
+            .then((response) => {
+              if (response.data.ejecucion.respuesta.estado === "OK") {
+                resolve(response.data.ejecucion.datos.producto);
+              } else {
+                reject(new Error(response.data.ejecucion.respuesta.mensaje));
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } catch (error) {
+          reject(error);
+        }
+      });
+      return p;
+    } catch (error) {
+      console.log("Error en el proceso:", error.message);
+    }
+  }
+
+  async function actualizarProducto(datosProducto) {
+    const params = {
+      datosProducto,
+    };
+
+    try {
+      const p = new Promise(async function (resolve, reject) {
+        try {
+          await axiosInstance
+            .put(RUTA_PRODUCTO_ACTUALIZAR, params)
+            .then((response) => {
+              if (response.data.ejecucion.respuesta.estado === "OK") {
+                resolve(response.data.ejecucion.datos);
+              } else {
+                reject(new Error(response.data.ejecucion.respuesta.mensaje));
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } catch (error) {
+          reject(error);
+        }
+      });
+      return p;
+    } catch (error) {
+      console.log("Error en el proceso:", error.message);
+    }
+  }
 
   return {
     cargarProductosEgreso,
+    actualizarProducto,
     paginationOriginal,
+    consultarProducto,
     paginationEgreso,
     cargarProductos,
     agregarProducto,
