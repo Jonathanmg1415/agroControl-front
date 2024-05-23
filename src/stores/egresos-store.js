@@ -4,8 +4,8 @@ import { date } from "quasar";
 import { ref } from "vue";
 
 const RUTA_LISTAR_EGRESOS = "/egresos";
-/* const RUTA_GUARDAR_PAGO = '/transaccionpago/guardar';*/
-const RUTA_EXPORTAR_EGRESOS = '/egresos/exportar';
+const RUTA_GUARDAR_EGRESOS = "/egresos/guardar";
+const RUTA_EXPORTAR_EGRESOS = "/egresos/exportar";
 
 export const useEgresosStore = defineStore("egresosStore", () => {
   const timeStamp = Date.now();
@@ -104,12 +104,12 @@ export const useEgresosStore = defineStore("egresosStore", () => {
     }
   }
 
-  /*   async function guardarRegistropago(params) {
+  async function guardarEgresos(params) {
     try {
       const p = new Promise(async function (resolve, reject) {
         try {
           await axiosInstance
-            .post(RUTA_GUARDAR_PAGO, params)
+            .post(RUTA_GUARDAR_EGRESOS, params)
             .then((response) => {
               if (response.data.ejecucion.respuesta.estado === "OK") {
                 resolve(response.data.ejecucion.datos);
@@ -128,7 +128,7 @@ export const useEgresosStore = defineStore("egresosStore", () => {
     } catch (error) {
       console.log("Error en el proceso:", error.message);
     }
-  } */
+  }
 
   async function exportarEgresos(original) {
     const params = {
@@ -168,10 +168,10 @@ export const useEgresosStore = defineStore("egresosStore", () => {
 
   return {
     paginationOriginalExportar,
-    exportarEgresos,
-    //guardarRegistropago,
     paginationExportar,
     paginationOriginal,
+    exportarEgresos,
+    guardarEgresos,
     filterOriginal,
     cargarEgresos,
     pagination,
