@@ -11,11 +11,11 @@
       </q-card>
     </q-page>
   </template>
-  
+
   <script setup>
   import { defineAsyncComponent } from 'vue';
-  
+
   const ActualizarProducto = defineAsyncComponent(() =>
-    import('src/components/productos/AgregarProducto.vue')
+    import('src/components/productos/ActualizarProducto.vue')
   );
   </script>

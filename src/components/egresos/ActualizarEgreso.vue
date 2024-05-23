@@ -407,7 +407,6 @@ async function onReset() {
     productos: productosSeleccionados.value,
   };
 
-  console.log("Updating egreso:", egreso);
   router.push("/main/egresos");
 } */
 
