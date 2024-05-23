@@ -1,5 +1,4 @@
 <template>
-  <div class="dashboard ">
     <div class="chart-container">
       <apexchart
         v-if="formattedSeries.length > 0"
@@ -12,7 +11,6 @@
     <q-item-label class="label">
       Ingresos y Egresos
     </q-item-label>
-  </div>
 </template>
 
 <script setup>

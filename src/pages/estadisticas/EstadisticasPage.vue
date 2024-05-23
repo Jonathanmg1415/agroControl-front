@@ -74,12 +74,12 @@
           <q-btn label="Aplicar filtro" @click="applyFilter" color="primary" />
         </div>
 
-        <div class="col-6 col-md-6">
+        <div class="col-6 col-md-6 q-pa-sm">
           <q-card>
             <diagrama-barras :startDate="fechaInicial" :endDate="fechaFinal" />
           </q-card>
         </div>
-        <div class="col-6 col-md-6">
+        <div class="col-6 col-md-6 q-pa-sm">
           <q-card-section class="row q-col-gutter-sm">
             <div class="col-6 col-md-6 q-pa-sm">
               <q-card>
@@ -98,7 +98,7 @@
                 </q-card-section>
               </q-card>
             </div>
-            <div class="col-6 col-md-6 q-pa-sm">
+            <div class="col-6 col-md-6 ">
               <q-card>
                 <q-card-section>
                   <div class="row items-center">
