@@ -198,10 +198,10 @@
           v-if="!estaModoVista"
           label="Guardar"
           type="submit"
-          color="secondary"
+          color="primary"
         />
         <q-btn
-          color="secondary"
+          color="primary"
           label="Cancelar"
           type="reset"
           class="q-ml-sm"

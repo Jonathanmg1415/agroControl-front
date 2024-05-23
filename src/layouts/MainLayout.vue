@@ -2,29 +2,25 @@
   <q-layout view="lHh Lpr lFf" class="img-background" @click="closeLeftDrawer">
     <div v-show="leftDrawerOpen" class="menu-overlay" @click.stop>
       <div class="menu-content bg-white text-black">
+        <div style="display: flex; justify-content: end;" >
+          <q-avatar icon="cancel" color="grey-5" @click="closeLeftDrawer" style="cursor: pointer; color: white"/>
+        </div>
         <q-list>
           <q-item
             class="menu-item"
+            style="border-radius: 8px; margin: 0.5vmax;"
             clickable
             v-for="(item, index) in menuItems"
             :key="index"
             @click="navigate(item.route)"
           >
+            <q-avatar :icon="item.icon" />
             <q-item-section class="menu-text">{{ item.label }}</q-item-section>
           </q-item>
         </q-list>
-        <q-btn
-          flat
-          dense
-          color="black"
-          class="q-mt-md"
-          @click="closeLeftDrawer"
-        >
-          Cerrar
-        </q-btn>
       </div>
     </div>
-    <q-header flat class="bg-green-7 rounded-lg shadow-2 q-pa-md">
+    <q-header flat class="bg-primary rounded-lg shadow-2">
       <q-toolbar
         class="toolbarShadow"
         style="border-radius: 10px 10px 10px 10px"
@@ -56,10 +52,10 @@
         </div>
       </q-toolbar>
     </q-header>
-    <q-page-container class="container-fluid">
+    <q-page-container class="container-fluid" style="background: #f0f3ff">
       <router-view />
     </q-page-container>
-    <q-footer class="bg-green-7 shadow-2">
+    <q-footer class="bg-primary shadow-2">
       <div class="rounded-lg shadow-1 p-4 flex justify-center items-center">
         <p class="text-white text-bold text-center">
           Copyright © - Pixie inc was here
@@ -84,11 +80,11 @@ const autenticacionStore = useAuthStore();
 const leftDrawerOpen = ref(false);
 
 const menuItems = [
-  { label: "Inicio", route: "/main" },
-  { label: "Productos", route: "/main/productos" },
-  { label: "Ingresos", route: "/main/ingresos" },
-  { label: "Egresos", route: "/main/egresos"},
-  { label: "Estadisticas", route: "/main/estadisticas" },
+  { label: "Inicio", route: "/main", icon: "home" },
+  { label: "Productos", route: "/main/productos", icon: "shopping_bag" },
+  { label: "Ingresos", route: "/main/ingresos", icon: "shopping_cart_checkout" },
+  { label: "Egresos", route: "/main/egresos", icon: "receipt_long" },
+  { label: "Estadisticas", route: "/main/estadisticas", icon: "show_chart" },
   // Agrega más elementos según necesites
 ];
 
@@ -143,9 +139,9 @@ function closeLeftDrawer() {
 .menu-content {
   position: relative;
   top: 10%;
-  left: 0;
-  width: 250px; /* Ancho del menú */
-  height: 35vh;
+  left: 2%;
+  width: 15vmax; /* Ancho del menú */
+  height: 24vmax;
   padding: 20px;
   border-radius: 10px;
 }

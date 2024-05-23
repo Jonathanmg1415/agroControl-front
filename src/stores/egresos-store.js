@@ -6,6 +6,7 @@ import { ref } from "vue";
 const RUTA_LISTAR_EGRESOS = "/egresos";
 const RUTA_GUARDAR_EGRESOS = "/egresos/guardar";
 const RUTA_EXPORTAR_EGRESOS = "/egresos/exportar";
+const RUTA_ELIMINAR_EGRESOS = "/egresos/eliminar";
 
 export const useEgresosStore = defineStore("egresosStore", () => {
   const timeStamp = Date.now();
@@ -166,6 +167,28 @@ export const useEgresosStore = defineStore("egresosStore", () => {
     }
   }
 
+  async function eliminarEgreso(idEgreso) {
+    try {
+      const p = new Promise(async function (resolve, reject) {
+        try {
+          await axiosInstance
+            .delete(RUTA_ELIMINAR_EGRESOS, { data: { idEgreso: idEgreso } })
+            .then((response) => {
+              resolve();
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } catch (error) {
+          reject(error);
+        }
+      });
+      return p;
+    } catch (error) {
+      console.log("Error en el proceso:", error.message);
+    }
+  }
+
   return {
     paginationOriginalExportar,
     paginationExportar,
@@ -174,6 +197,7 @@ export const useEgresosStore = defineStore("egresosStore", () => {
     guardarEgresos,
     filterOriginal,
     cargarEgresos,
+    eliminarEgreso,
     pagination,
     records,
     filter,

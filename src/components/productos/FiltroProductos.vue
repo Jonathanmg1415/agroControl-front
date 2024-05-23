@@ -32,7 +32,7 @@
               label="Buscar"
               icon="search"
               type="submit"
-              color="secondary"
+              color="accent"
             />
           </div>
           <div>
@@ -40,7 +40,7 @@
               label="Limpiar"
               icon="cancel"
               type="reset"
-              color="secondary"
+              color="accent"
             />
           </div>
         </q-form>

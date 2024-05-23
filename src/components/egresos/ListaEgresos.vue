@@ -170,7 +170,7 @@ import { useEgresosStore } from "stores/egresos-store.js";
 import { useRoute, useRouter } from "vue-router";
 import { useQuasar, date } from "quasar";
 import { ref, computed, onMounted } from "vue";
-import * as XLSX from 'xlsx/xlsx.mjs';
+import * as XLSX from "xlsx/xlsx.mjs";
 
 const columns = [
   {
@@ -304,16 +304,25 @@ function abrirCrearEgreso() {
   router.push("/main/egresos/nuevo");
 }
 
-function eliminarEgreso(idegreso) {
-  const encoded = window.btoa(idegreso);
-  //router.push("/main/cliente/editar/" + encoded);
-  $q.notify({
-    progress: true,
-    message: "Eliminar egreso esta en contrucción ",
-    icon: "information",
-    color: "white",
-    textColor: "orange",
-  });
+async function eliminarEgreso(idegreso) {
+  try {
+    $q.loading.show({
+      message: "Eliminando ...",
+    });
+    await egresosStore.eliminarEgreso(idegreso);
+    await egresosStore.cargarEgresos();
+  } catch (error) {
+    $q.notify({
+      progress: true,
+      message: "Ha ocurrido un error: " + error.message,
+      color: "warning",
+      icon: "warning",
+      textColor: "white",
+      multiLine: true,
+    });
+  } finally {
+    $q.loading.hide();
+  }
 }
 
 function editarEgreso(idegreso) {

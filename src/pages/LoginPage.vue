@@ -1,7 +1,7 @@
 <template>
   <q-page class="row flex-center login">
-    <div class="col-xl-5 col-lg-5 col-md-5 col-xs-12">
-      <q-card flat>
+    <div class="col-xl-5 col-lg-5 col-md-5 col-xs-12" style="display: flex; justify-content: center;">
+      <q-card flat style="border-radius: 16px; width: 30vmax; height: 32vmax; padding-top: 4vmax;">
         <q-card-section class="flex flex-center">
           <div class="col-xl-8 col-lg-8 col-md-10 col-xs-10">
             <div class="q-pb-md">
@@ -24,7 +24,7 @@
         </q-card-section>
         <q-form @submit.prevent="onSubmit" ref="form">
           <div class="row justify-center">
-            <div class="col-xl-6 col-lg-6 col-md-10 col-xs-10">
+            <div class="col-xl-8 col-lg-8 col-md-10 col-xs-10 q-mt-md">
               <div class="text-secondary text-weight-bold q-pa-sm">Email</div>
               <q-input
                 v-model="email"
@@ -40,7 +40,7 @@
           </div>
 
           <div class="row justify-center">
-            <div class="col-xl-6 col-lg-6 col-md-10 col-xs-10">
+            <div class="col-xl-8 col-lg-8 col-md-10 col-xs-10 q-mt-md">
               <div class="text-secondary text-weight-bold q-pa-sm">
                 Password
               </div>
