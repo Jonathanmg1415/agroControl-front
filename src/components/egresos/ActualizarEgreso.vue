@@ -32,9 +32,7 @@
         </q-toolbar>
       </div>
       <div class="row q-col-gutter-sm">
-        <div
-          class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-weight-bold fontG"
-        >
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-weight-bold fontG">
           Datos generales del egreso
         </div>
 
@@ -63,12 +61,7 @@
                     :locale="fechasEs"
                   >
                     <div class="row items-center justify-end">
-                      <q-btn
-                        v-close-popup
-                        label="Cerrar"
-                        color="primary"
-                        flat
-                      />
+                      <q-btn v-close-popup label="Cerrar" color="primary" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -85,8 +78,7 @@
             label="Nombre del egreso*"
             :options="listaNombre"
             :rules="[
-              (val) =>
-                (val != null && val !== '') || 'Seleccione el tipo de egreso',
+              (val) => (val != null && val !== '') || 'Seleccione el tipo de egreso',
             ]"
           >
             <template v-slot: append>
@@ -116,97 +108,102 @@
           </q-input>
         </div>
 
-        <div
-          class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-weight-bold fontG"
-        >
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-weight-bold fontG">
           Detalle del egreso
         </div>
 
-        <!-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-          <q-input
-            :readonly="estaModoVista"
-            filled
-            maxlength="45"
-            v-model="primerNombre"
-            label="Primer nombre *"
-            lazy-rules
-            :rules="[
-              (val) => (val && val.length > 0) || 'Ingrese el primer nombre',
-              (val) =>
-                /^[A-ZÑa-zñáéíóúÁÉÍÓÚ'° ]+$/.test(val) ||
-                'Sólo se permiten letras',
-            ]"
-          >
-            <template v-slot: append>
-              <div class="flex flex-center">
-                <q-icon name="badge" size="1.2vmax" />
-              </div>
-            </template>
-          </q-input>
-        </div> -->
-
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 q-pl-md">
+          <div class="row items-center">
+            <q-select
+              filled
+              v-model="productoSeleccionado"
+              label="Productos"
+              :options="productos"
+              option-value="id"
+              option-label="nombre"
+            >
+              <template v-slot:option="scope">
+                <q-item v-bind="scope.itemProps">
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.nombre }}</q-item-label>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.precio }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-btn
+              color="primary"
+              icon="add"
+              @click="agregarProducto(productoSeleccionado)"
+              class="q-ml-sm"
+            />
+          </div>
+        </div>
       </div>
 
-      <div class="row justify-center">
+      <div class="q-mt-md">
+        <q-table
+          :rows="productosSeleccionados"
+          :columns="columns"
+          row-key="id"
+          class="q-pa-sm"
+        >
+          <template v-slot:body-cell-precio="props">
+            <q-td :props="props">
+              {{ props.row.precio }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-acciones="props">
+            <q-td :props="props">
+              <q-btn
+                color="negative"
+                icon="delete"
+                @click="eliminarProducto(props.row)"
+              />
+            </q-td>
+          </template>
+        </q-table>
+      </div>
+
+      <div class="text-right q-mt-md q-mr-md">
         <q-btn
           v-if="!estaModoVista"
           label="Guardar"
           type="submit"
           color="secondary"
         />
-        <q-btn
-          color="secondary"
-          label="Cancelar"
-          type="reset"
-          class="q-ml-sm"
-        />
+        <q-btn color="secondary" label="Cancelar" type="reset" class="q-ml-sm" />
+        <div class="text-h6 q-mt-md">Total: {{ total }}</div>
       </div>
     </q-form>
   </div>
 </template>
+
 <script setup>
-import { useQuasar, date } from 'quasar';
+import { useEgresosStore } from "stores/egresos-store.js";
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useEgresosStore } from 'stores/egresos-store.js';
+import { useQuasar, date } from 'quasar';
 
 const router = useRouter();
 const $q = useQuasar();
+const egresosStore = useEgresosStore();
 
 const fechasEs = ref({
   months: [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-    'Agosto',
-    'Septiembre',
-    'Octubre',
-    'Noviembre',
-    'Diciembre',
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ],
-  days: [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miercoles',
-    'Jueves',
-    'Viernes',
-    'Sabado',
-  ],
+  days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 });
 
 const fechaEgreso = ref(null);
 const nombre = ref(null);
 const descripcion = ref(null);
-
-const egresosStore = useEgresosStore();
-const egresoAuxiliar = ref({});
-const dateNow = ref(Date.now());
-const today = ref(date.formatDate(dateNow.value, 'YYYY/MM/DD'));
+const productoSeleccionado = ref(null);
+const productosSeleccionados = ref([]);
 
 const listaNombre = ref([
   { value: 'Fumigación', label: 'FUMIGACIÓN' },
@@ -215,6 +212,18 @@ const listaNombre = ref([
   { value: 'Plantación', label: 'PLANTACIÓN' },
   { value: 'Mano_de_obra', label: 'TRABAJO' },
 ]);
+
+const productos = ref([
+  { id: 1, nombre: 'Producto 1', precio: 100 },
+  { id: 2, nombre: 'Producto 2', precio: 200 },
+  { id: 3, nombre: 'Producto 3', precio: 300 },
+]);
+
+const columns = [
+  { name: 'nombre', label: 'Producto', field: 'nombre' },
+  { name: 'precio', label: 'Precio', field: 'precio', align: 'right' },
+  { name: 'acciones', label: 'Acciones', field: 'acciones', align: 'center' },
+];
 
 const props = defineProps({
   egreso: {
@@ -232,187 +241,70 @@ const props = defineProps({
 });
 
 const validacionFechaEgreso = {
-  date: [
-    (val) =>
-      validacionFecha(val) ||
-      val === null ||
-      'La fecha del egreso es inválida',
-  ],
+  date: [(val) => validacionFecha(val) || val === null || 'La fecha del egreso es inválida'],
 };
 
 function validacionFecha(fechaDEgreso) {
   return fechaDEgreso <= today.value;
 }
 
-/* const validarCampoVacio = {
-  val: [(val) => validarVacio(val) || 'Sólo se permiten letras'],
-};
+const dateNow = ref(Date.now());
+const today = ref(date.formatDate(dateNow.value, 'YYYY/MM/DD'));
 
-function validarVacio(valorAEvaluar) {
-  if (valorAEvaluar !== '') {
-    return /^[A-ZÑa-zñáéíóúÁÉÍÓÚ'° ]+$/.test(valorAEvaluar);
+function agregarProducto(productoId) {
+  const producto = productos.value.find((p) => p.id === productoId);
+  if (producto && !productosSeleccionados.value.some((p) => p.id === producto.id)) {
+    productosSeleccionados.value.push(producto);
+    console.log('Producto agregado:', producto);
+  } else {
+    console.log('Producto no encontrado o ya seleccionado:', productoId);
   }
-  if (valorAEvaluar === '') {
-    return true;
+}
+
+function eliminarProducto(producto) {
+  const index = productosSeleccionados.value.findIndex((p) => p.id === producto.id);
+  if (index !== -1) {
+    productosSeleccionados.value.splice(index, 1);
   }
-} */
+}
+
+const total = computed(() => {
+  return productosSeleccionados.value.reduce((sum, producto) => sum + producto.precio, 0);
+});
 
 async function onReset() {
   nombre.value = null;
   descripcion.value = null;
   fechaEgreso.value = null;
-
+  productosSeleccionados.value = [];
   router.back();
 }
 
 async function actualizarEgreso() {
-  let tipoId = '';
-  listaNombre.value.forEach((element) => {
-    if (element.label === nombre.value) {
-      tipoId = element.value;
-    }
-  });
-
   const egreso = {
     id: props.egreso.id,
     fecha: new Date(fechaEgreso.value),
-    nombre: tipoId,
+    nombre: nombre.value,
     descripcion: descripcion.value,
+    productos: productosSeleccionados.value,
   };
 
-  if (JSON.stringify(egresoAuxiliar.value) === JSON.stringify(egreso)) {
-    $q.notify({
-      progress: true,
-      message: 'Sin cambios en el los datos del egreso. ',
-      icon: 'warning',
-      color: 'secondary',
-      textColor: 'white',
-    });
-    router.push('/main/egresos');
-    return;
-  }
-
-  try {
-    $q.loading.show({
-      backgroundColor: '#fff',
-      message: 'Actualizando Egreso...',
-      messageColor: 'white',
-    });
-
-    //await egresosStore.actualizarEgreso(egreso);
-
-    $q.notify({
-      progress: true,
-      message: 'El egreso se actualizo satisfactoriamente. ',
-      icon: 'save',
-      color: 'white',
-      textColor: 'primary',
-    });
-    router.push('/main/egresos');
-  } catch (error) {
-    if (error.message.includes('Network Error')) {
-      $q.notify({
-        progress: true,
-        message:
-          'Error de conexión con el servidor. Por favor, revisa tu conexión a internet.',
-        icon: 'error',
-        color: 'red',
-        textColor: 'white',
-      });
-    } else if (!error.response) {
-      $q.notify({
-        progress: true,
-        message: 'Error al momento de cargar los registros. ',
-        icon: 'error',
-        color: 'red',
-        textColor: 'white',
-      });
-    } else {
-      $q.notify({
-        progress: true,
-        message: error.response.data.split('\n')[0],
-        icon: 'warning',
-        color: 'red',
-        textColor: 'white',
-      });
-    }
-  } finally {
-    $q.loading.hide();
-  }
+  // Simulate API call
+  console.log('Updating egreso:', egreso);
+  router.push('/main/egresos');
 }
 
 async function agregarEgreso() {
-  try {
-    $q.loading.show({
-      backgroundColor: '#fff',
-      message: 'Guardando egreso...',
-      messageColor: 'white',
-    });
-    if (
-      nombre.value !== null &&
-      descripcion.value !== null &&
-      fecha.value !== null
-    ) {
-      if (nombre.value !== null) {
-        nombre.value = nombre.value.label;
-      }
+  const egreso = {
+    fecha: new Date(fechaEgreso.value),
+    nombre: nombre.value,
+    descripcion: descripcion.value,
+    productos: productosSeleccionados.value,
+  };
 
-      const egreso = {
-        fecha: new Date(fechaEgreso.value),
-        nombre: nombre.value.value,
-        descripcion: descripcion.value,
-      };
-
-      //await egresosStore.agregarEgreso(egreso);
-
-      $q.notify({
-        progress: true,
-        message: 'El egreso se agrego satisfactoriamente. ',
-        icon: 'save',
-        color: 'white',
-        textColor: 'primary',
-      });
-
-      router.back();
-    } else {
-      $q.notify({
-        progress: true,
-        message: 'Error en los datos del egreso. ',
-        icon: 'warning',
-        color: 'secondary',
-        textColor: 'white',
-      });
-    }
-  } catch (error) {
-    if (error.message.includes('Network Error')) {
-      $q.notify({
-        progress: true,
-        message:
-          'Error de conexión con el servidor. Por favor, revisa tu conexión a internet.',
-        icon: 'error',
-        color: 'red',
-        textColor: 'white',
-      });
-    } else if (!error.response) {
-      $q.notify({
-        progress: true,
-        message: 'Error al momento de cargar los registros. ',
-        icon: 'error',
-        color: 'red',
-        textColor: 'white',
-      });
-    } else {
-      $q.notify({
-        progress: true,
-        message: error.response.data.split('\n')[0],
-        icon: 'warning',
-        color: 'red',
-        textColor: 'white',
-      });
-    }
-  } finally {
-    $q.loading.hide();
-  }
+  // Simulate API call
+  console.log('Adding egreso:', egreso);
+  router.push('/main/egresos');
 }
 
 function onSubmit() {
@@ -423,41 +315,17 @@ function onSubmit() {
   }
 }
 
-onMounted(async () => {
-  try {
-    $q.loading.show({
-      backgroundColor: '#fff',
-      message: 'Precargando datos...',
-      messageColor: 'white',
-    });
-
-    if (!props.estaModoCrear) {
-      const egreso = props.egreso;
-      egresoAuxiliar.value = props.egreso;
-      let tipoId = '';
-      listaNombre.value.forEach((element) => {
-        if (element.value === egreso.nombre) {
-          tipoId = element.label;
-        }
-      });
-      nombre.value = tipoId;
-      descripcion.value = egreso.descripcion;
-      fechaEgreso.value = egreso.fecha;
-    }
-
-  } catch (error) {
-    $q.notify({
-      progress: true,
-      message: 'Error en la precarga de los datos',
-      icon: 'error',
-      color: 'red',
-      textColor: 'white',
-    });
-  } finally {
-    $q.loading.hide();
+onMounted(async() => {
+  if (!props.estaModoCrear) {
+    const egreso = props.egreso;
+    nombre.value = egreso.nombre;
+    descripcion.value = egreso.descripcion;
+    fechaEgreso.value = egreso.fecha;
+    productosSeleccionados.value = egreso.productos || [];
+  } else {
+    //await egresosStore.consultarParametros();
   }
 });
-
 </script>
 
 <style lang="scss" scoped>
