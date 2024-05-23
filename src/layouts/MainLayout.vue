@@ -87,6 +87,7 @@ const menuItems = [
   { label: "Inicio", route: "/main" },
   { label: "Egresos", route: "/main/egresos"},
   { label: "Estadisticas", route: "/main/estadisticas" },
+  { label: "Productos", route: "/main/productos" },
   { label: "Ingresos", route: "/main/ingresos" },
   // Agrega más elementos según necesites
 ];
@@ -102,7 +103,7 @@ function toggleLeftDrawer() {
 function logout() {
   $q.dialog({
     title: "Cierre de sesión",
-    message: "Usted esta saliendo de la aplicación",
+    message: "Usted está saliendo de la aplicación",
     ok: "Continuar",
     cancel: "Cancelar",
   })
