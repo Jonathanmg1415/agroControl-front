@@ -30,6 +30,11 @@ const routes = [
         meta: { auth: true },
       },
       {
+        path: "ingresos/nuevo",
+        component: () => import("src/pages/ingresos/NuevoIngreso.vue"),
+        meta: { auth: true },
+      },
+      {
         path: "productos",
         component: () => import("src/pages/productos/GestionProductos.vue"),
         meta: { auth: true },
