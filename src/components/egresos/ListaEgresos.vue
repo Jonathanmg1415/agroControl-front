@@ -301,14 +301,7 @@ function fixedNumber(number) {
 }
 
 function abrirCrearEgreso() {
-  //router.push("/main/cliente/nuevo");
-  $q.notify({
-    progress: true,
-    message: "Agregar egreso esta en contrucción ",
-    icon: "information",
-    color: "white",
-    textColor: "orange",
-  });
+  router.push("/main/egresos/nuevo");
 }
 
 function eliminarEgreso(idegreso) {
