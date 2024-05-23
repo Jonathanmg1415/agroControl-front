@@ -29,8 +29,8 @@
           <!-- <q-td v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.value }}
           </q-td> -->
-  
-          
+
+
           <q-td key="nombre" :props="props">
             {{ props.row.nombre }}
           </q-td>
@@ -43,24 +43,9 @@
           <q-td key="descripcion" :props="props">
             {{ props.row.descripcion }}
           </q-td>
-  
+
           <q-td auto-width>
             <div class="row q-pr-md">
-              <div class="col">
-                <q-btn
-                  @click="verProducto(JSON.stringify(props.row.id))"
-                  flat
-                  bordered
-                  class
-                  size="10px"
-                  round
-                  color="transparent"
-                  text-color="positive"
-                  icon="visibility"
-                >
-                  <q-tooltip class="bg-grey-6">Ver detalles</q-tooltip>
-                </q-btn>
-              </div>
               <div class="col q-pl-md">
                 <q-btn
                   @click="editarProducto(JSON.stringify(props.row.id))"
@@ -76,41 +61,13 @@
                   <q-tooltip class="bg-grey-6">Editar producto</q-tooltip>
                 </q-btn>
               </div>
-              <div class="col q-pl-md">
-                <q-btn
-                  @click="eliminarProducto(JSON.stringify(props.row.id))"
-                  flat
-                  bordered
-                  class
-                  size="10px"
-                  round
-                  color="red"
-                  text-color="red"
-                  icon="delete_forever"
-                >
-                  <q-tooltip class="bg-grey-6">Eliminar producto</q-tooltip>
-                </q-btn>
-              </div>
             </div>
           </q-td>
         </q-tr>
       </template>
-  
-      <template v-slot:top-right="props">
+
+      <template v-slot:top-right>
         <div class="row q-col-gutter-md">
-          <q-btn
-            flat
-            round
-            dense
-            :icon="mode === 'grid' ? 'list' : 'grid_on'"
-            @click="
-              mode = mode === 'grid' ? 'list' : 'grid';
-              separator = mode === 'grid' ? 'none' : 'horizontal';
-            "
-            v-if="!props.inFullscreen"
-          >
-          </q-btn>
-  
           <div>
             <q-btn
               @click="abrirCrearProducto()"
@@ -121,22 +78,6 @@
               no-caps
             />
           </div>
-  
-         <!-- <div>
-            <q-btn
-              color="accent"
-              icon-right="archive"
-              label="Exportar productos"
-              no-caps
-            />
-            <q-menu>
-              <q-list dense style="min-width: 185px">
-                <q-item clickable v-close-popup @click="exportarTablaXlsx()">
-                  <q-item-section>XLSX</q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </div>-->
         </div>
       </template>
       <template v-slot:top-left>
@@ -144,13 +85,13 @@
           <q-avatar square icon="receipt_long" font-size="30px">
             <!-- <img src="assets/" /> -->
           </q-avatar>
-  
+
           <q-toolbar-title
             ><span class="text-weight-bold">Productos</span></q-toolbar-title
           >
         </q-toolbar>
       </template>
-  
+
       <template v-slot:bottom>
         <div class="full-width row flex-center text-accent q-gutter-sm">
           <q-pagination
@@ -165,18 +106,18 @@
       </template>
     </q-table>
   </template>
-  
+
   <script setup>
   import { useProductosStore } from "stores/productos-store.js";
   import { useRoute, useRouter } from "vue-router";
   import { useQuasar, date } from "quasar";
   import { ref, computed, onMounted } from "vue";
   //import * as XLSX from 'xlsx/xlsx.mjs';
-  
+
   const columns = [
-    { name: "nombre", 
-      align: "center", 
-      label: "Nombre", 
+    { name: "nombre",
+      align: "center",
+      label: "Nombre",
       field: "nombre" },
     {
       name: "valorestimado",
@@ -184,9 +125,9 @@
       label: "Valor_estimado",
       field: "valorestimado",
     },
-    { name: "tipo", 
-      align: "center", 
-      label: "Tipo", 
+    { name: "tipo",
+      align: "center",
+      label: "Tipo",
       field: "tipo" },
     {
       name: "descripcion",
@@ -195,10 +136,10 @@
       field: "descripcion",
     },
   ];
-  
+
   const hoy = new Date();
   const formattedString = date.formatDate(hoy, "YYYY-MM-DD");
-  
+
   const route = useRoute();
   const router = useRouter();
   const productosStore = useProductosStore();
@@ -209,25 +150,19 @@
       return productosStore.records.data;
     },
   });
-  
-  const rowsExport = computed({
-    get() {
-      return productosStore.records.dataExportar;
-    },
-  });
-  
+
   const localPagination = computed({
     get() {
       return productosStore.pagination;
     },
   });
-  
+
   const maxPage = computed(() =>
     Math.ceil(
         productosStore.pagination.rowsNumber / productosStore.pagination.rowsPerPage
     )
   );
-  
+
   const currentPage = computed({
     get() {
       return +productosStore.pagination.page;
@@ -236,31 +171,31 @@
         productosStore.pagination.page = pageNumber;
     },
   });
-  
+
   const mode = ref("list"); // Modo de vista de la tabla
   const loading = ref(false);
   const isLoading = ref(false);
-  
-  /*const initialPagination = ref({
-    sortBy: "fecha",
+
+  const initialPagination = ref({
+    sortBy: "nombre",
     descending: false,
     page: 1,
     rowsPerPage: 10,
     rowsNumber: 10,
-  });*/
-  
+  });
+
   onMounted(async () => {
     try {
       isLoading.value = true;
       $q.loading.show({
         message: "Cargando Productos ...",
       });
-  
+
       onInitialRequest({
         pagination: initialPagination.value,
         filter: undefined,
       });
-  
+
       await productosStore.cargarProductos(true);
     } catch (error) {
       if (error.message.includes("Network Error")) {
@@ -294,13 +229,13 @@
       $q.loading.hide();
     }
   });
-  
+
   function fixedNumber(number) {
     return new Intl.NumberFormat("es-CO", {
       maximumFractionDigits: 2,
     }).format(+number);
   }
-  
+
   function abrirCrearProducto() {
     //router.push("/main/cliente/nuevo");
     $q.notify({
@@ -311,19 +246,7 @@
       textColor: "orange",
     });
   }
-  
-  function eliminarProducto(idproducto) {
-    const encoded = window.btoa(idproducto);
-    //router.push("/main/cliente/editar/" + encoded);
-    $q.notify({
-      progress: true,
-      message: "Eliminar producto esta en contrucción ",
-      icon: "information",
-      color: "white",
-      textColor: "orange",
-    });
-  }
-  
+
   function editarProducto(idproducto) {
     const encoded = window.btoa(idproducto);
     //router.push("/main/cliente/editar/" + encoded);
@@ -335,33 +258,21 @@
       textColor: "orange",
     });
   }
-  
-  function verProducto(idproducto) {
-    const encoded = window.btoa(idproducto);
-    //router.push("/main/cliente/detallescliente/" + encoded);
-    $q.notify({
-      progress: true,
-      message: "Ver detalles del producto esta en contrucción ",
-      icon: "information",
-      color: "white",
-      textColor: "orange",
-    });
-  }
-  
+
   async function onInitialRequest() {
     if (rows.value.length === 0) {
         productosStore.pagination = productosStore.paginationOriginal;
     }
   }
-  
+
   async function onRequest(pageNumber) {
     try {
       loading.value = true;
-  
+
       $q.loading.show({
         message: "Cargando ...",
       });
-  
+
       productosStore.pagination.page = +pageNumber;
       await productosStore.cargarProductos();
     } catch (error) {
@@ -377,78 +288,23 @@
       $q.loading.hide();
     }
   }
-  
+
   async function ordenarPor(parametrosOrden) {
     const { page, rowsPerPage, sortBy, descending } = parametrosOrden.pagination;
-  
+
     loading.value = true;
-  
+
     initialPagination.value.page = page;
     initialPagination.value.rowsPerPage = rowsPerPage;
     initialPagination.value.sortBy = sortBy;
     initialPagination.value.descending = descending;
-  
+
     productosStore.pagination.descending = descending;
     productosStore.pagination.page = page;
     productosStore.cargarProductos();
     loading.value = false;
-  
+
     $q.loading.hide();
   }
-  
-  function ordenarDatos() {
-    // Ordeno los datos y filtro
-    const datosExportar = rowsExport.value.map((row) => ({
-      Nombre: row.nombre,
-      Estimado: row.valorestimado,
-      Tipo: row.tipo,
-      Descripcion: row.descripcion,
-    }));
-    return datosExportar;
-  }
-  
-  /*async function exportarTablaXlsx() {
-    try {
-      $q.loading.show({
-        message: "Cargando exportación ...",
-      });
-  
-      await productosStore.exportarProductos(true);
-      const datosExportar = ordenarDatos();
-  
-      // Creamos una hoja de cálculo con nuestros datos tipo JSON
-      const worksheet = XLSX.utils.json_to_sheet(datosExportar);
-  
-      // Creamos nuestro libro de trabajo
-      const workBook = XLSX.utils.book_new();
-  
-      // Agregamos nuestra hoja de cálculo a nuestor libro de trabajo (libro,hoja,nombrar hoja)
-      XLSX.utils.book_append_sheet(workBook, worksheet, "Productos");
-  
-      // Generó buffer, para que me ayude cuando tengo gran cantidad de datos
-      XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-  
-      // Binary string
-      XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
-  
-      // Descargar el archivo
-      XLSX.writeFile(workBook, "Productos-" + formattedString + ".xlsx");
-    } catch (error) {
-      $q.notify({
-        progress: true,
-        message: "Error al momento de exportar los Productos. " + error,
-        icon: "warning",
-        color: "secondary",
-        textColor: "white",
-      });
-    } finally {
-      $q.loading.hide();
-    }
-  }*/
-  </script>
-  
-  <style lang="sass" scoped>
- 
 
-  </style>
-  
+  </script>
