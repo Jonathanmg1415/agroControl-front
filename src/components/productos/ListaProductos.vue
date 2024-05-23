@@ -74,7 +74,7 @@
               color="accent"
               label="Agregar producto"
               text-color="white"
-              icon="add_card"
+              icon="add"
               no-caps
             />
           </div>
@@ -242,14 +242,7 @@
 
   function editarProducto(idproducto) {
     const encoded = window.btoa(idproducto);
-    //router.push("/main/cliente/editar/" + encoded);
-    $q.notify({
-      progress: true,
-      message: "Editar producto esta en contrucción ",
-      icon: "information",
-      color: "white",
-      textColor: "orange",
-    });
+    router.push("/main/productos/editar/" + encoded);
   }
 
   async function onInitialRequest() {

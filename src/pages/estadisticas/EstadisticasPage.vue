@@ -215,7 +215,6 @@ const ultimosMovimientos = defineAsyncComponent(() =>
 );
 
 const applyFilter = () => {
-  console.log("Filtro aplicado:", fechaInicial.value, fechaFinal.value);
   calculateTotals();
 };
 
