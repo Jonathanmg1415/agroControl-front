@@ -23,6 +23,11 @@ const routes = [
         component: () => import("src/pages/GraficasPage.vue"),
         meta: { auth: true },
       },
+      {
+        path: "ingresos",
+        component: () => import("src/pages/ingresos/GestionIngresos.vue"),
+        meta: { auth: true },
+      },
     ],
   },
   {
